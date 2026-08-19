@@ -1,4 +1,5 @@
 Assignment 0: Journal
+
     1. Where am I starting from: My previous major prior to one I graduated with was Computer Science. I believe I went through with this major for about 1 year, so I have some coding experience. Throughout my bachelors in engineering, I have learned a significant amount of physics, Matlab, Python, and various numerical methods. Using GitHub is a bit intimidating since I have not relied on it in about 4 years, but these skills are slowly coming back to me. 
     
     2. What do you want to get out of this course: I want to learn more about Python and how to implement GitHub in my day-to-day life; I see real potential impact with efficient and proficient use of GitHub and other related tools. 
