@@ -11,3 +11,8 @@ Assignment 1 / Module 1: Journal
     Reflect on your first numerical solve. What surprised you? This specific assignment was quite a bit more difficult than I expected. Although I do have some experience with Python, the iterations of the code along with the use of a ".ipynb" file was newer to me; the coding and graphing itself was not the most diffcult, but running each bit of code sequentially and successfully was quite taxing. However, with the help of AI and a significant amount of staring at my computer screen, I was able to get it done. 
 
     The idea of drag and Euler's equations were nothing new to me; I have seen and solved these dozens of times. The addition of code was a bit odd, but it got done. Going forward, I will start these assignments earlier and will attempt to use AI less. AI was quite useful when running into dead ends, but I believe continual use of said tools will degrade my work and make me less adept at coding and general tasks.
+
+Assignment 2 / Module 2: Journal
+    Reflect on what did learned about trusting (or not trusting) a simulation?
+
+    A good evergy conservation check should not be optional; a simulation can produce a reasonable looking trajectory, but this can unknowingly drify energy. A method like Euler-Cromer only proves itself on the right kind of problem (a projectile can't tell you anything, since gravity's position-independence makes both methods equally wrong in opposite directions).
