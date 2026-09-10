@@ -16,3 +16,7 @@ Assignment 2 / Module 2: Journal
     Reflect on what did learned about trusting (or not trusting) a simulation?
 
     A good evergy conservation check should not be optional; a simulation can produce a reasonable looking trajectory, but this can unknowingly drify energy. A method like Euler-Cromer only proves itself on the right kind of problem (a projectile can't tell you anything, since gravity's position-independence makes both methods equally wrong in opposite directions).
+
+Assignment 3 / Module 3: Journal
+    Reflect on what has been the hardest concept so far? What clicked this week?
+    The hardest concept so far was definiely the new phase space graph. Especially with oscillations, it is quite difficult to visually understand how this works. The coding in general has also been getting a bit more difficult; with moving parts (literally), there is so much syntax to keep track of and understand that I sometimes forget which variables I am working with and which need to be fed into which equation/graph. But, this week, GitHub pushing and understanding how to use the terminal have clicked much more for me. I was initially confused on how to commit files as well as how to move, edit, and upload files to GitHub, but I can now do this quite seamlessly without the use of notes of instruction!
