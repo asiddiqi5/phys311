@@ -21,3 +21,6 @@ Assignment 3 / Module 3: Journal
     Reflect on what has been the hardest concept so far? What clicked this week?
     
     The hardest concept so far was definiely the new phase space graph. Especially with oscillations, it is quite difficult to visually understand how this works. The coding in general has also been getting a bit more difficult; with moving parts (literally), there is so much syntax to keep track of and understand that I sometimes forget which variables I am working with and which need to be fed into which equation/graph. But, this week, GitHub pushing and understanding how to use the terminal have clicked much more for me. I was initially confused on how to commit files as well as how to move, edit, and upload files to GitHub, but I can now do this quite seamlessly without the use of notes of instruction!
+
+Assignment 4 / Module 3: Journal
+    This concept was a pretty difficult to implement. But, I did not find it as hard as last week; I enjoyed looking at how ot implement a table in the code, which makes all of the data present well. Nothing particularly clicked well this week, but I am continuing to cement my knowledge on the various topics of Mechanics
