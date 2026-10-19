@@ -32,7 +32,14 @@ Assignment 5 / Module 5: Journal
 
     Honestly, the hardest concept thus far was likely this module. Understanding how orbit works conceptually and then graphing the orbits was quite difficult, especially when relating more than one. Nothing really clicked this week; I understood most of what was done the last modules; this module might have clicked this week, but I am still trying to understand the concepts. 
 
-Assignment 6 / Module 5: Journal
+Assignment 6 / Module 6: Journal
     Reflect on what has been the hardest concept so far? What clicked this week?
 
     Honestly, this module was not too difficult, since a lot of it overlapped with material from the other mechanics classes I have taken. Nothing really clicked this week, since most of what we covered built directly on things I already understood going in. One new tidbit was seeing angular momentum conservation play out with a changing moment of inertia, like a skater pulling their arms in. It was interesting to see the kinetic energy increase even though nothing external is doing work on the system in the torque sense. Overall I did not find anything in this module too confusing.
+
+Assignment 6 / Module 6: Journal
+    Reflect on what has been the hardest concept so far? What clicked this week?
+
+    Honestly, this module was definitely the hardest so far. Building an engine out of classes and a package was very new to me. In the earlier modules I mostly wrote one script per lab, so splitting the code into separate parts was a big change. I needed to use AI much more this time to understand how the pieces fit together. Nothing really clicked this week, and I am still working on understanding how everything connects.
+
+
