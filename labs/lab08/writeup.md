@@ -6,7 +6,7 @@ Lab: PHYS 311 Module 8
 
 **AI use disclaimer:** AI (Claude) was used in preparing this code and write-up for coding assistance, tidying up code, and improving code flow/organization. This is not to say that there was no human work done; all of it included input and assistance from myself and many iterations and human attempts are consolidated into what is seen here.
 
-Live link (bonus): TBD
+Live link (bonus): https://asiddiqi5.github.io/phys311/labs/lab08/
 
 Files in labs/lab08/: index.html, style.css, vec2.js, main.js, README.md. The file vec2.js holds the Vec2 class. The file main.js holds the Vec2 self-test, the Body class, the force models, the two integrators, the Camera, the drawing, the accumulator loop and the controls.
 
@@ -33,7 +33,7 @@ Every result below was calculated by hand first. The Console prints PASS for eac
 
 In JavaScript, two names can point at the same object, so changing one changes the other. A clone is a separate object.
 
-### Coordinate transform
+### Coordinate Transform
 
 The Camera converts meters to pixels with x_px = (x - x0) * scale and y_px = H - (y - y0) * scale, where H = 520 is the canvas height. The minus sign in the y equation is the flip. The Part A scene uses scale = 50 px per m and shows the physics point (-1, -1) at the bottom-left corner, so the ground line has a margin below it.
 
