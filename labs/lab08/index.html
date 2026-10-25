@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lab 8: Port Integrator to JavaScript</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Lab 8: Port Integrator to JavaScript</h1>
+
+<canvas id="sim" width="900" height="520"></canvas>
+
+<div class="panel">
+  <label>Scene
+    <select id="scene">
+      <option value="static">Part A: coordinate test</option>
+      <option value="projectile" selected>Projectile (20 m/s, 50&deg;)</option>
+      <option value="spring">Spring oscillator (m = k = 1)</option>
+    </select>
+  </label>
+  <label>Integrator
+    <select id="integrator">
+      <option value="eulerCromer" selected>Euler-Cromer</option>
+      <option value="velocityVerlet">Velocity Verlet</option>
+    </select>
+  </label>
+  <label>Timestep
+    <select id="timestepMode">
+      <option value="fixed" selected>Fixed (accumulator)</option>
+      <option value="variable">Variable (frame time)</option>
+    </select>
+  </label>
+  <label>DT
+    <select id="dt">
+      <option value="240">1/240 s</option>
+      <option value="120" selected>1/120 s</option>
+      <option value="60">1/60 s</option>
+      <option value="20">1/20 s (coarse)</option>
+    </select>
+  </label>
+  <button id="relaunch">Relaunch (R)</button>
+  <button id="pause">Pause (P)</button>
+  <button id="lag">Lag spike 300 ms (L)</button>
+  <button class="alt" id="headless">Run headless</button>
+</div>
+
+<div id="log">Ready. Run headless prints 1200 steps of DT = 1/120 (10 s, no rendering) here and in the Console. Press T to toggle fixed and variable timestep.</div>
+
+<div class="note">
+  With constant gravity, Velocity Verlet is exact at any step size, so use Euler-Cromer to see what a variable timestep does.
+  You can also type <code>runHeadless()</code> in the Console.
+</div>
+
+<script type="module" src="main.js"></script>
+
+</body>
+</html>
