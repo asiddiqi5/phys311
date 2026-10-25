@@ -42,4 +42,8 @@ Assignment 7 / Module 7: Journal
 
     Honestly, this module was definitely the hardest so far. Building an engine out of classes and a package was very new to me. In the earlier modules I mostly wrote one script per lab, so splitting the code into separate parts was a big change. I needed to use AI much more this time to understand how the pieces fit together. Nothing really clicked this week, and I am still working on understanding how everything connects.
 
+Assignment 8 / Module 8: Journal
+    Reflect on what felt familiar, what felt alien. Did anything about the physics become clearer when you had to rewrite it?
+
+    Honestly, the physics felt pretty familiar since it was the same integrators from Lab 7. What felt alien was JavaScript and getting everything to run in the browser. One thing that became clearer was why a fixed timestep matters; the variable step made the energy drift much worse, which I never really thought about in Python.
 
