@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab 9: Multi-Body Browser Simulation</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>PHYS 311 Lab 9: Multi-Body Browser Simulation</h1>
+  <p>One engine with four scenes. Modules with an <code>engine/</code> and <code>render/</code> split, a fixed-timestep accumulator and a live conservation HUD.</p>
+  <p><b>AI use disclaimer:</b> AI (Claude) was used for coding assistance, tidying up code, and improving code flow. All work included my own input, and many iterations and attempts are consolidated here.</p>
+</header>
+
+<div class="wrap">
+  <div class="stage">
+    <canvas id="sim"></canvas>
+    <div class="note" id="note"></div>
+  </div>
+
+  <div>
+    <div class="panel">
+      <h2>Scene</h2>
+      <label for="scene">Simulation</label>
+      <select id="scene"></select>
+
+      <label for="integrator">Integrator</label>
+      <select id="integrator"></select>
+
+      <label for="nBodies">Bodies</label>
+      <select id="nBodies"></select>
+
+      <label for="restitution">Restitution e = <span id="eValue">1.00</span></label>
+      <input type="range" id="restitution" min="0" max="1" step="0.05" value="1">
+
+      <label for="dt">Fixed timestep DT</label>
+      <select id="dt">
+        <option value="120">1/120 s (coarse)</option>
+        <option value="240">1/240 s (default)</option>
+        <option value="480">1/480 s</option>
+        <option value="1000">1/1000 s (fine)</option>
+      </select>
+
+      <label for="broadphase">Broad phase</label>
+      <select id="broadphase">
+        <option value="brute">Brute force, O(N&sup2;)</option>
+        <option value="hash">Spatial hash, about O(N)</option>
+      </select>
+
+      <div class="row">
+        <button id="playpause">Pause</button>
+        <button id="stepOnce" class="ghost">Step</button>
+        <button id="reset" class="ghost">Reset</button>
+      </div>
+
+      <div class="checks">
+        <label><input type="checkbox" id="guard" checked> separating guard (vn &gt; 0)</label>
+        <label><input type="checkbox" id="trails"> trails</label>
+        <label><input type="checkbox" id="vectors"> v &amp; a</label>
+        <label><input type="checkbox" id="grid" checked> grid</label>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Conservation HUD</h2>
+      <div id="hud"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Headless Checks</h2>
+      <p class="small">Same code as <code>node tests/validate.js</code>. It needs no canvas.</p>
+      <div class="row">
+        <button id="runTests">Run 13 checks</button>
+        <button id="runBench" class="ghost">Scaling benchmark</button>
+      </div>
+      <pre class="tests" id="testOut"></pre>
+    </div>
+  </div>
+</div>
+
+<footer>Drag to pan, scroll to zoom, R to reset, P to pause. The structure follows the PHYS 311 Week 9 reference engine.</footer>
+<script type="module" src="main.js"></script>
+</body>
+</html>
