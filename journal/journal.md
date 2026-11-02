@@ -47,3 +47,7 @@ Assignment 8 / Module 8: Journal
 
     Honestly, the physics felt pretty familiar since it was the same integrators from Lab 7. What felt alien was JavaScript and getting everything to run in the browser. One thing that became clearer was why a fixed timestep matters; the variable step made the energy drift much worse, which I never really thought about in Python.
 
+Assignment 9 / Module 9: Journal
+    Reflect on what porting revealed about your Python design?  What would you architect differently if you started over?
+
+    Porting showed that most of my Python design held up, since World.step() moved over almost line for line. What it did reveal was what I never had to think about in Python, like a fixed timestep needing an accumulator and capturing the starting energy once instead of every frame. If I started over, I would mark forces as internal or external from the beginning and keep track of wall impulses, since that is what I ended up needing for the momentum test.
