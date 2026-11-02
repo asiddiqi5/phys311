@@ -15,7 +15,7 @@ export class World {
     this.bounds = null;                // a BoxBounds, or null for no walls
     this.integrator = integrator;
     this.restitution = restitution;
-    this.broadPhase = broadPhase;      // "brute" or "hash"
+    this.broadPhase = broadPhase;      
     this.hash = new SpatialHash(1);
     this.collisions = true;
     this.separatingGuard = true;       // the vn > 0 check. off only for the jitter demo
