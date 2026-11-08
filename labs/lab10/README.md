@@ -4,7 +4,7 @@
 
 **Reference:** the folder layout and the `engine/` and `render/` modules are my Lab 9 code, copied in unchanged. I used the Week 10 lesson and reference project as a guide for the UI ideas (a spring to drag bodies, the accessibility checklist, headless tests). The reactor, the slingshot preview, the visuals, the energy and neutron ledgers, and the tests are new.
 
-Live link: TBD
+Live link: https://asiddiqi5.github.io/phys311/labs/lab10/
 
 ## 1. What is This?
 
@@ -73,17 +73,7 @@ Results from the test run:
 | Abuse: 4000 random actions, 35 resets, 155 grabs | No NaN, no overflow, balance exact, worst ledger error 1.80 % (Euler-Cromer at DT = 1/60 alone reads about 2 %) |
 | `engine/` has no `ctx`, `canvas`, `document` or `window` | Checked by the test |
 
-The **neutron balance** is an exact integer identity. The **energy ledger** books every flow the engine cannot see, so neutron energy absorbed by fuel and rods or lost by leaking, the energy of newly born neutrons, the heat bath, the source, atoms added or removed by the slider, and the mouse's work. The HUD's "ledger error" is what is left over, so it measures the solver and not the reactions. It turns red past 1 %. The leftover comes mostly from the engine pushing a neutron and a spring-held atom apart after contact. It shrinks as DT shrinks and grows with the lattice stiffness.
-
-The CSV can be checked in Python. In one scripted run (601 rows) the neutron balance computed from the CSV alone had a residual of exactly 0:
-
-```python
-import pandas as pd
-d = pd.read_csv("reactor_run.csv")
-made = d.from_source + d.fired + d.births
-lost = d.fissions + d.rod_absorptions + d.leaked
-print(((d.neutrons - d.neutrons[0]) - ((made - made[0]) - (lost - lost[0]))).abs().max())   # 0
-```
+The **neutron balance** is an exact integer identity. The **energy ledger** books every flow the engine cannot see, so neutron energy absorbed by fuel and rods or lost by leaking, the energy of newly born neutrons, the heat bath, the source, atoms added or removed by the slider, and the mouse's work. The HUD's "ledger error" is what is left over, so it measures the solver and not the reactions. It turns red past 1 %. The leftover most likely comes from the engine pushing a neutron and a spring-held atom apart after contact. It shrinks as DT shrinks and grows with the lattice stiffness.
 
 ## 5. What are its Limits?
 

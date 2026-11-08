@@ -14,7 +14,7 @@ body {
   line-height: 1.5;
   color: var(--ink);
   background: var(--bg);
-  max-width: 1180px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 16px;
 }
@@ -30,11 +30,11 @@ h2 { font-size: 0.95em; text-transform: uppercase; letter-spacing: 0.04em; color
 
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-/* stage on the left, controls and diagnostics stacked on the right */
+/* diagnostics on the left, stage in the middle, controls on the right */
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 330px;
-  grid-template-areas: "stage controls" "stage hud";
+  grid-template-columns: 290px minmax(0, 1fr) 330px;
+  grid-template-areas: "hud stage controls";
   gap: 14px;
   align-items: start;
 }
