@@ -4,7 +4,7 @@
 
 **Reference:** the folder layout and the `engine/` and `render/` modules are my Lab 9 code, copied in unchanged. I used the Week 10 lesson and reference project as a guide for the UI ideas (a spring to drag bodies, the accessibility checklist, headless tests). The reactor, the slingshot preview, the visuals, the energy and neutron ledgers, and the tests are new.
 
-Live link: `https://<username>.github.io/phys311/labs/lab10/`
+Live link: TBD
 
 ## 1. What is This?
 
