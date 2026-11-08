@@ -51,3 +51,10 @@ Assignment 9 / Module 9: Journal
     Reflect on what porting revealed about your Python design?  What would you architect differently if you started over?
 
     Porting showed that most of my Python design held up, since World.step() moved over almost line for line. What it did reveal was what I never had to think about in Python, like a fixed timestep needing an accumulator and capturing the starting energy once instead of every frame. If I started over, I would mark forces as internal or external from the beginning and keep track of wall impulses, since that is what I ended up needing for the momentum test.
+
+Assignment 10 / Module 10: Journal
+    What surprised you about designing for a user rather than for yourself?  What's your final project going to be?  Any thoughts already?
+
+    The biggest surprise was how much a user notices. I built the reactor and it looked fine to me. Then I watched it the way someone new would, and I saw the moderator atoms flying out of the orange square and coming back. It also looked different on the website than on my computer, so I learned that what I see locally is not what someone else would see.
+
+    For my final project, I plan to keep building on the reactor. I want to add temperature feedback so the reactor starts to regulate itself, and maybe delayed neutrons.
