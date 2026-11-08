@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reactor Core Explorer</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<a class="skip" href="#controls">Skip to the controls</a>
+
+<header>
+  <h1>Reactor Core Explorer</h1>
+  <p id="purpose">A toy nuclear reactor core. Slide the control rods and the moderator to push the chain
+  reaction above or below critical (k = 1) and watch the neutron population respond. Fire more neutrons
+  with the mouse.</p>
+  <p class="sub">A model in arbitrary units. It is not a real reactor.</p>
+</header>
+
+<div class="layout">
+
+  <main class="stage" id="stage">
+    <canvas id="sim" tabindex="0" role="img"
+            aria-label="Reactor core simulation. Neutrons move through fuel rods, moderator atoms and control rods. The live numbers are in the diagnostics panel.">
+      This page shows a 2D reactor core. Yellow rings are fuel, blue dots are moderator atoms, gray squares are
+      control rods, and small colored dots are neutrons, blue when slow and red when fast. A slow neutron that
+      hits fuel usually causes a fission, which releases two or three fast neutrons. Moderator atoms slow
+      neutrons down, and control rods absorb them. The control panel and the diagnostics panel give every number
+      as text, and every mouse action also has a keyboard route.
+    </canvas>
+
+    <div id="chart-box">
+      <canvas id="chart" role="img" aria-label="Neutron population over the last 40 seconds, on a log scale. The current numbers are in the diagnostics panel.">
+        Chart of the neutron population over time.
+      </canvas>
+    </div>
+
+    <p id="note" class="note"></p>
+    <p id="live" class="sr-only" role="status" aria-live="polite"></p>
+  </main>
+
+  <aside class="panel" id="controls" aria-label="Controls">
+
+    <h2>Reactor</h2>
+    <div class="row">
+      <label for="rods">Control rods inserted <output id="rods-out" for="rods"></output></label>
+      <input type="range" id="rods" min="0" max="100" step="1" value="60">
+    </div>
+    <div class="row">
+      <label for="moderator">Moderator amount <output id="moderator-out" for="moderator"></output></label>
+      <input type="range" id="moderator" min="0" max="100" step="1" value="100">
+    </div>
+    <div class="row">
+      <label for="albedo">Reflector <output id="albedo-out" for="albedo"></output></label>
+      <input type="range" id="albedo" min="0" max="95" step="1" value="75">
+    </div>
+    <div class="row">
+      <label for="source">Neutron source <output id="source-out" for="source"></output></label>
+      <input type="range" id="source" min="0" max="20" step="1" value="4">
+    </div>
+
+    <h2>Fire a neutron</h2>
+    <div class="row">
+      <label for="fireSpeed">Fire speed <output id="fireSpeed-out" for="fireSpeed"></output></label>
+      <input type="range" id="fireSpeed" min="0.5" max="14" step="0.5" value="3">
+    </div>
+    <div class="btns">
+      <button id="btn-fire" type="button">Fire (F)</button>
+      <button id="btn-scram" type="button" class="danger">SCRAM (S)</button>
+    </div>
+    <p class="hint">Mouse or touch: press on empty space, pull back, and release to launch. A dashed line shows
+    where it will first hit. Press on a neutron to grab and throw it. Slow neutrons (blue) cause fission.
+    Fast ones (red) mostly bounce.</p>
+
+    <h2>Simulation</h2>
+    <div class="btns">
+      <button id="btn-play" type="button" aria-pressed="false">Pause</button>
+      <button id="btn-step" type="button">Step (.)</button>
+      <button id="btn-reset" type="button">Reset (R)</button>
+    </div>
+    <div class="row">
+      <label for="speed">Speed <output id="speed-out" for="speed"></output></label>
+      <input type="range" id="speed" min="0.25" max="2" step="0.25" value="1">
+    </div>
+    <div class="row">
+      <label for="dt">Timestep DT <output id="dt-out" for="dt"></output></label>
+      <input type="range" id="dt" min="0" max="3" step="1" value="2">
+    </div>
+    <div class="row">
+      <label for="integrator">Integrator</label>
+      <select id="integrator">
+        <option value="Euler">Euler (watch it fail)</option>
+        <option value="EulerCromer">Euler-Cromer</option>
+        <option value="VelocityVerlet" selected>Velocity Verlet</option>
+      </select>
+    </div>
+
+    <h2>Display</h2>
+    <label class="check"><input type="checkbox" id="trails" checked> Neutron trails</label>
+    <label class="check"><input type="checkbox" id="speedColor" checked> Color neutrons by speed</label>
+    <label class="check"><input type="checkbox" id="flashes" checked> Fission flashes</label>
+    <label class="check"><input type="checkbox" id="vectors"> Velocity arrows</label>
+    <label class="check"><input type="checkbox" id="showChart" checked> Population chart</label>
+
+    <h2>Data</h2>
+    <div class="btns">
+      <button id="btn-csv" type="button">Download CSV</button>
+    </div>
+
+    <h2>Demo</h2>
+    <label class="check"><input type="checkbox" id="teleport"> Teleport drag (the wrong way)</label>
+
+    <h2>Keyboard</h2>
+    <p class="keys">
+      <kbd>Space</kbd> pause or resume &middot; <kbd>.</kbd> one step &middot; <kbd>R</kbd> reset<br>
+      <kbd>&minus;</kbd> <kbd>+</kbd> speed &middot; <kbd>F</kbd> fire &middot; <kbd>S</kbd> SCRAM<br>
+      <kbd>T</kbd> trails &middot; <kbd>Esc</kbd> let go of a grab or cancel an aim
+    </p>
+  </aside>
+
+  <section class="panel" id="hud-box" aria-label="Live diagnostics">
+    <h2>Live diagnostics</h2>
+    <div id="hud" role="status" aria-live="off"></div>
+  </section>
+
+</div>
+
+<footer>
+  <strong>How to Read the Diagnostics:</strong> k<sub>eff</sub> is neutrons made by fission divided by neutrons lost
+  (to fission, rods, leaks) over the last 4 seconds. Above 1, the population grows, and below 1 it shrinks. The neutron
+  balance is exac, so neutrons in minus neutrons out must equal the count. The energy ledger books every flow the
+  engine cannot see (absorption, fission, the heat bath, the source, your mouse), so the ledger error measures the
+  solver and not the reactions. It turns red past 1 %.
+  <br><br>
+  <strong>Limits:</strong> 2D only, circles only, arbitrary units, no heat feedback and no delayed neutrons.
+  Neutrons never collide with each other. A speed limit of 20 m/s stops tunneling, and a cap of 400 neutrons
+  protects the frame rate, so a runaway chain stops growing at the cap.
+  <p class="ai-note"><strong>AI Use Disclaimer:</strong> AI (Claude) was used extensively in preparing this code and write-up for coding assistance, tidying up code, and improving code flow/organization. This is not to say that there was no human work done; all of it included input and assistance from myself and many iterations and human attempts are consolidated into what is seen here.</p>
+</footer>
+
+<script type="module" src="main.js"></script>
+
+</body>
+</html>
