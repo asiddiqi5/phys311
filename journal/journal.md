@@ -58,3 +58,10 @@ Assignment 10 / Module 10: Journal
     The biggest surprise was how much a user notices. I built the reactor and it looked fine to me. Then I watched it the way someone new would, and I saw the moderator atoms flying out of the orange square and coming back. It also looked different on the website than on my computer, so I learned that what I see locally is not what someone else would see.
 
     For my final project, I plan to keep building on the reactor. I want to add temperature feedback so the reactor starts to regulate itself, and maybe delayed neutrons.
+
+Assignment 11 / Module 11: Journal
+    Why did you choose this this project, and what scares you about it?
+
+    I picked the reactor because I already liked it and it is close to the nuclear side of my program. The reason I added temperature feedback is that my Lab 10 reactor had no way to stop itself. Real reactors are stable because they get hot. It is unrealistic to have a model reactor with no temperature control.
+    
+    What scares me is the tests I have not thought to run yet. The one test I had been avoiding failed pretty badly the first time I tried it and the cause was not the new feature.
