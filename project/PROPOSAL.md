@@ -79,13 +79,12 @@ is where a symplectic method works well. Over 20 s the energy ledger error is 0.
 
 **Test 1: equilibrium against a closed form.** Setting both rates to zero.
 
-- Quantity: steady $T$ and $N$ · Expected: the positive root · **Tolerance: < 0.1 %** in the point
+- Quantity: steady $T$ and $N$. Expected: the positive root. **Tolerance: < 0.1 %** in the point
   model, **< 5 %** for the 120 s average in the full simulation
 
 **Test 2: heat ledger closes.**
 
-- Quantity: heat generated − removed − stored, over heat generated · Expected: zero
-  · **Tolerance: < 10⁻⁶** over 60 s. Measured: **0.000 %**
+- Quantity: heat generated − removed − stored, over heat generated. Expected: zero. **Tolerance: < 10⁻⁶** over 60 s. Measured: **0.000 %**
 
 **Test 3: switch off.** My normal energy readout is meaningless, because fission creates energy
 and absorption destroys it. Turning the reactions off restores a testable system.
@@ -99,13 +98,12 @@ I first ran 3b at the normal stiffness ($k = 120$) and it failed at **61 %**. Wh
 
 **Test 4: the feedback does what it claims.**
 
-- Quantity: births dropped at the 400 cap over 150 s with the rods 20 % in
-  · **Tolerance: > 1000 off, < 50 on**. Measured **1980 off, 0 on**
+- Quantity: births dropped at the 400 cap over 150 s with the rods 20 % in. **Tolerance: > 1000 off, < 50 on**. Measured **1980 off, 0 on**
 
 **Test 5 : timestep.** Steady $T$ at `DT = 1/60` through `1/480`, **tolerance < 0.5 %**. Spike
 measures 0.0 %.
 
-**Test 6: determinism.** Same seed, 3000 steps, twice: **bit-for-bit identical**.
+**Test 6: determinism.** Same seed, 3000 steps, twice was **bit-for-bit identical**.
 
 ---
 
@@ -123,7 +121,7 @@ challenge and the validation report, which needs no new physics.
 | Week | Deliverable |
 |---|---|
 | 11 | Proposal, risk spike, workshop review |
-| 12 | MUST tier complete, Tests 1–4 passing, deployed |
+| 12 | MUST tier complete, Tests 1-4 passing, deployed |
 | 13 | SHOULD tier, `VALIDATION.md`, README, write-up |
 
 ---
