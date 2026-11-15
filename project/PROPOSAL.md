@@ -23,9 +23,9 @@ Four kinds of body, all discs, all already in my Lab 10 engine:
 
 | Interaction | Expression |
 |---|---|
-| Neutron–atom collision | elastic, impulse along the line of centres, $e = 1$. Equal masses, so a neutron keeps $1 - \tfrac{8A}{3(1+A)^2} = \tfrac13$ of its energy on average |
-| Moderator lattice | $\vec F = -k(\vec r - \vec r_0)$, $k = 120$, each atom tethered to its site |
-| Heat bath (coolant) | $\vec F = -c\vec v + \sqrt{2ck_BT/\Delta t}\,\vec\xi$, $c = 8$, $k_BT = 1$ |
+| Neutron–atom Collision | elastic, impulse along the line of centres, $e = 1$. Equal masses, so a neutron keeps $1 - \tfrac{8A}{3(1+A)^2} = \tfrac13$ of its energy on average |
+| Moderator Lattice | $\vec F = -k(\vec r - \vec r_0)$, $k = 120$, each atom tethered to its site |
+| Heat Bath (coolant) | $\vec F = -c\vec v + \sqrt{2ck_BT/\Delta t}\,\vec\xi$, $c = 8$, $k_BT = 1$ |
 | Fission | on contact with fuel, $P = 0.55$ if $E_k < 4$ else $0.02$; removes the neutron, creates 2–3 at $v = 14$ |
 | Absorption / Leakage | control rods absorb on contact; the boundary reflects with probability `albedo`, else the neutron is lost |
 | Mouse Grab | $\vec F = k_m(\vec r_\text{cursor} - \vec r) - c_m\vec v$, $k_m = 200$, $c_m = 20$ |
@@ -77,8 +77,7 @@ is where a symplectic method works well. Over 20 s the energy ledger error is 0.
 
 ## 4. Validation Plan
 
-**Test 1: equilibrium against a closed form.** Setting both rates to zero gives a quadratic: 
-$\Delta T = T - T_c$: $\;k_0\alpha\,\Delta T^2 - (k_0-1)\,\Delta T - Sq/\lambda = 0$.
+**Test 1: equilibrium against a closed form.** Setting both rates to zero.
 
 - Quantity: steady $T$ and $N$ · Expected: the positive root · **Tolerance: < 0.1 %** in the point
   model, **< 5 %** for the 120 s average in the full simulation
