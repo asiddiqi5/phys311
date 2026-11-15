@@ -1,8 +1,8 @@
 # Final Project Proposal — PHYS 311
 
 **Name: Aidan Siddiqi**  **Date:** Week 11
-**Repo:** `github.com/<username>/phys311` → `project/`
-**Live:** `<username>.github.io/phys311/project/`
+**Repo:** `https://github.com/asiddiqi5/phys311/tree/main/project`
+**Live:** 'https://asiddiqi5.github.io/phys311/project/'
 
 **AI use disclaimer:** AI (Claude) was used extensively in preparing this code and write-up for coding assistance, tidying up code, and improving code flow/organization. This is not to say that there was no human work done; all of it included input and assistance from myself and many iterations and human attempts are consolidated into what is seen here.
 
