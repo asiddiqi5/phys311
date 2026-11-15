@@ -1,0 +1,25 @@
+1. No feedback (alpha = 0):
+   N = 400 (that is the 400 cap), k stuck at 1.35.
+   Nothing but my neutron cap stops it. That is the problem I am fixing.
+
+2. With feedback, measured vs the closed form:
+   alpha     T model   T formula     N model   N formula
+   0.002       151.9      151.9         231        231
+   0.004        87.0       87.0         117        117
+   0.008        54.6       54.6          60         60
+   0.02         34.9       34.9          26         26
+   They agree to the digits shown. It settles, and it settles where it should.
+
+3. Timestep (alpha = 0.02, the stiffest case):
+   DT = 1/60    T = 34.945   N = 26.2
+   DT = 1/120   T = 34.945   N = 26.2
+   DT = 1/240   T = 34.945   N = 26.2
+   DT = 1/480   T = 34.945   N = 26.2
+   No change. The loop is slow compared with my 1/120 physics step.
+
+4. Turning the feedback up (with slow cooling, the worst case):
+   alpha 0.01   N =    7   T =   60.5   
+   alpha 0.05   N =    2   T =   33.8   
+   alpha 0.12   N =    1   T =   28.2   <-- core shuts down
+   alpha 0.3    N =    1   T =   24.9   <-- core shuts down
+   It does not oscillate. It dies. So the slider needs an upper limit.
