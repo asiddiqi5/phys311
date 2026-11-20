@@ -18,6 +18,10 @@ const SLIDERS = {
   moderator: { min: 0,    max: 100, fmt: (v) => `${v.toFixed(0)} %`,      set: (v, c) => c.world().setModerator(v / 100) },
   albedo:    { min: 0,    max: 95,  fmt: (v) => `${v.toFixed(0)} %`,      set: (v, c) => { c.world().p.albedo = v / 100; } },
   source:    { min: 0,    max: 20,  fmt: (v) => `${v.toFixed(0)} /s`,     set: (v, c) => { c.world().p.source = v; } },
+  // feedback strength, shown as a percent per degree. the spike found the core shuts down above
+  // about 0.1 per degree with slow cooling, so the slider stops at 0.05
+  alpha:     { min: 0,    max: 5,   fmt: (v) => `${(v / 100).toFixed(3)} /deg`, set: (v, c) => { c.world().p.alpha = v / 100; } },
+  cooling:   { min: 0.1,  max: 3,   fmt: (v) => `${v.toFixed(1)}`,         set: (v, c) => { c.world().p.cooling = v; } },
   fireSpeed: { min: 0.5,  max: 14,  fmt: (v) => `${v.toFixed(1)} m/s`,    set: (v, c) => { c.state.fireSpeed = v; } },
   speed:     { min: 0.25, max: 2,   fmt: (v) => `${v.toFixed(2)}x`,       set: (v, c) => { c.state.speed = v; } },
   dt:        { min: 0,    max: 3,   fmt: (v) => `1/${Math.round(1 / DT_CHOICES[Math.round(v)])} s`, set: (v, c) => c.actions.setDT(Math.round(v)) },
@@ -55,6 +59,7 @@ export function setupUI(ctx) {
     vectors:    (on) => { ctx.renderer.showVectors = on; },
     showChart:  (on) => { $("chart-box").hidden = !on; },
     teleport:   (on) => { ctx.actions.setTeleport(on); },
+    feedback:   (on) => { ctx.world().p.feedback = on; },
   };
   for (const [id, fn] of Object.entries(toggles)) {
     const el = $(id);
@@ -87,6 +92,7 @@ export function sync(ctx) {
   const w = ctx.world();
   const values = {
     rods: w.p.rods * 100, moderator: w.p.moderator * 100, albedo: w.p.albedo * 100, source: w.p.source,
+    alpha: w.p.alpha * 100, cooling: w.p.cooling,
     fireSpeed: ctx.state.fireSpeed, speed: ctx.state.speed, dt: ctx.state.dtIndex,
   };
   for (const [id, v] of Object.entries(values)) {
@@ -99,6 +105,8 @@ export function sync(ctx) {
     play.textContent = ctx.state.running ? "Pause" : "Resume";
     play.setAttribute("aria-pressed", String(!ctx.state.running));
   }
+  const fb = $("feedback");
+  if (fb) fb.checked = w.p.feedback;
   const integ = $("integrator");
   if (integ) integ.value = w.integrator.constructor.name;
 }
@@ -145,6 +153,13 @@ export class Recorder {
       E_with_ledger: world.totalEnergy(),
       dE_over_E0: world.drift().dE,
       ledger_error_rel: world.ledgerError().rel,
+      fuel_T: world.T,
+      fuel_factor: world.fuelFactor(),
+      heat_generated: world.heat.generated,
+      heat_removed: world.heat.removed,
+      heat_residual_rel: world.heatBalance().rel,
+      feedback_alpha: p.feedback ? p.alpha : 0,
+      cooling: p.cooling,
       rods_pct: p.rods * 100,
       moderator_pct: p.moderator * 100,
       reflector_pct: p.albedo * 100,

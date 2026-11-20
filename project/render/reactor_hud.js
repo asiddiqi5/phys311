@@ -33,6 +33,14 @@ export class ReactorHUD {
           "At the cap, new births are dropped and k_eff is not reliable"),
       row("k<sub>eff</sub>", criticality(k), "", "Neutrons produced by fission divided by neutrons lost, over the last 4 s"),
       row("fissions", world.count.fissions),
+      row("fuel temp", `${world.T.toFixed(1)} &deg;`, world.T > world.p.Tcool + 40 ? "warn" : "",
+          "Each fission heats the fuel. The coolant carries heat away."),
+      row("fission rate vs cold", `${(100 * world.fuelFactor()).toFixed(0)} %`,
+          world.p.feedback ? (world.fuelFactor() < 0.5 ? "warn" : "good") : "",
+          world.p.feedback ? "Hot fuel fissions less readily, which is what holds the power steady"
+                           : "Temperature feedback is OFF: nothing but the neutron cap limits a runaway"),
+      row("heat balance", `${(100 * world.heatBalance().rel).toFixed(3)} %`, lvl(world.heatBalance().rel),
+          "Heat generated minus heat removed minus heat stored, as a fraction of the heat generated"),
       row("rod / leak", `${world.count.absRod} / ${world.count.leaked}`),
       row("neutron balance", nb.ok ? "exact" : `MISMATCH ${nb.actual} vs ${nb.expected}`, nb.ok ? "good" : "bad",
           "start + source + fired + born - fissions - rods - leaks must equal the count"),
@@ -40,7 +48,9 @@ export class ReactorHUD {
       row("KE", `${fmt(world.kineticEnergy(), 1)} J`),
       row("PE (lattice)", `${fmt(world.potentialEnergy(), 1)} J`),
       row("E with ledger", `${fmt(d.E, 1)} J`),
-      row("&Delta;E/E&#8320;", `${(d.dE * 100).toFixed(3)} %`, lvl(d.dE), "Change since the scene was built, against the starting energy"),
+      row("&Delta;E/E&#8320;", `${(d.dE * 100).toFixed(3)} %`, "",
+          "Change since the scene was built, against the starting energy. In a reactor this is EXPECTED to be large: "
+          + "fission creates energy and absorption destroys it, so E0 is not a meaningful yardstick. The ledger error below is the honest test."),
       row("ledger error", `${(le.rel * 100).toFixed(3)} %`, lvl(le.rel),
           "Energy error against all the energy created by fission, the source and you"),
       "<hr>",
@@ -56,6 +66,7 @@ export class ReactorHUD {
     ].join("");
 
     this.el.setAttribute("aria-label",
-      `${world.nCount} neutrons, multiplication factor ${criticality(k)}, energy ledger error ${(le.rel * 100).toFixed(2)} percent`);
+      `${world.nCount} neutrons, multiplication factor ${criticality(k)}, fuel temperature ${world.T.toFixed(0)} degrees, `
+      + `energy ledger error ${(le.rel * 100).toFixed(2)} percent`);
   }
 }

@@ -60,6 +60,16 @@
       <input type="range" id="source" min="0" max="20" step="1" value="4">
     </div>
 
+    <div class="row">
+      <label for="alpha">Temperature feedback <output id="alpha-out" for="alpha"></output></label>
+      <input type="range" id="alpha" min="0" max="5" step="0.1" value="5">
+    </div>
+    <div class="row">
+      <label for="cooling">Coolant flow <output id="cooling-out" for="cooling"></output></label>
+      <input type="range" id="cooling" min="0.1" max="3" step="0.1" value="0.5">
+    </div>
+    <label class="check"><input type="checkbox" id="feedback" checked> Temperature feedback on</label>
+
     <h2>Fire a neutron</h2>
     <div class="row">
       <label for="fireSpeed">Fire speed <output id="fireSpeed-out" for="fireSpeed"></output></label>
@@ -126,6 +136,56 @@
 
 </div>
 
+<section class="explainer" aria-label="What am I looking at?">
+
+  <h2>What am I looking at?</h2>
+
+  <p>A reactor makes heat by splitting atoms. Four
+  things are on the canvas:</p>
+
+  <div class="legend-grid">
+    <div><span class="chip neutron"></span><strong>Neutrons</strong> (small dots) split.
+    Their colour is their speed: red is fast, blue is slow.<div></div>
+
+    <div><span class="chip fuel"></span><strong>Fuel</strong> (yellow rings) is the uranium. A
+    neutron splitting a fuel atom is a fission, meaning it releases heat and throws out two
+    or three new neutrons, which split more atoms. That is a chain reaction.</div>
+
+    <div><span class="chip mod"></span><strong>Moderator</strong> (blue dots) is the water. Fast
+    neutrons are bad at causing fission and slow ones are good at it, so its job is to slow neutrons
+    down. Turn it off and the chain reaction dies, even with plenty of fuel.</div>
+
+    <div><span class="chip rod"></span><strong>Control rods</strong> (grey squares) swallow any neutron that touches them, which is how a reactor is turned up and down.</div>
+  </div>
+
+  <h3>The Most Important Variable is K</h3>
+
+  <p>For every neutron that disappears, how many new ones are made? That ratio is <strong>k</strong>.
+  Below 1 the reaction ceases to produce neutrons. At 1, the power is steady, and is "critical"
+  meaning the normal running state of every power reactor. Above 1, the population grows. The chart
+  uses a log scale, so steady growth or decay is a straight line.</p>
+
+  <h3>Why Temperature Matters</h3>
+
+  <p>Hot fuel fissions slightly less readily than cold fuel. That is why reactors are
+  controllable; as the power climbs, the fuel heats, and the heat pushes k back down on its own, so
+  the reactor settles by itself.</p>
+
+  <h3>Try These</h3>
+
+  <ul class="try-list">
+    <li>Pull the rods out and watch the population climb, then settle as the fuel heats.</li>
+    <li>Drag the moderator to zero. The chain reaction dies even though the fuel is untouched.</li>
+    <li>Press <strong>S</strong> for SCRAM, the emergency shutdown that drops every rod at once.</li>
+    <li>Turn the temperature feedback off and pull the rods out.</li>
+    <li>Drag on empty space to launch your own neutron, and aim it at a fuel ring.</li>
+  </ul>
+
+  <p class="caveat">This is a toy, which is made up of fake units, two dimensions, and far less going on than a real
+  reactor.</p>
+
+</section>
+
 <footer>
   <strong>How to Read the Diagnostics:</strong> k<sub>eff</sub> is neutrons made by fission divided by neutrons lost
   (to fission, rods, leaks) over the last 4 seconds. Above 1, the population grows, and below 1 it shrinks. The neutron
@@ -133,7 +193,11 @@
   engine cannot see (absorption, fission, the heat bath, the source, your mouse), so the ledger error measures the
   solver and not the reactions. It turns red past 1 %.
   <br><br>
-  <strong>Limits:</strong> 2D only, circles only, arbitrary units, no heat feedback and no delayed neutrons.
+  <strong>Fuel Temperature.</strong> Each fission heats the fuel, and the coolant carries heat away. Hot fuel
+  fissions less readily, so k falls as the core heats and the reactor settles at a steady power on its own.
+  Turn the feedback off and nothing but the neutron cap stops a runaway.
+  <br><br>
+  <strong>Limits:</strong> 2D only, circles only, arbitrary units, and no delayed neutrons.
   Neutrons never collide with each other. A speed limit of 20 m/s stops tunneling, and a cap of 400 neutrons
   protects the frame rate, so a runaway chain stops growing at the cap.
   <p class="ai-note"><strong>AI Use Disclaimer:</strong> AI (Claude) was used extensively in preparing this code and write-up for coding assistance, tidying up code, and improving code flow/organization. This is not to say that there was no human work done; all of it included input and assistance from myself and many iterations and human attempts are consolidated into what is seen here.</p>

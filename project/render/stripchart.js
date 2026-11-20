@@ -37,10 +37,29 @@ export class StripChart {
       ctx.fillStyle = "#9aa7b8";
       ctx.fillText(n === cap ? `${n} cap` : String(n), 4 * dpr, y + 3 * dpr);
     }
-    ctx.fillStyle = "#9aa7b8";
+    ctx.fillStyle = "#ff8200";
     ctx.fillText(`neutrons (log scale), last ${this.window} s`, pad.l, h - 6 * dpr);
 
     if (s.length < 2) return;
+
+    // fuel temperature, on its own scale, so the two curves can be compared by shape
+    const tMax = Math.max(40, ...s.map((p) => p.T || 0));
+    const yT = (T) => pad.t + (h - pad.t - pad.b) * (1 - (T - world.p.Tcool) / Math.max(tMax - world.p.Tcool, 1));
+    ctx.strokeStyle = "#f08c3a";
+    ctx.lineWidth = 1.5 * dpr;
+    ctx.setLineDash([5 * dpr, 4 * dpr]);
+    ctx.beginPath();
+    let startedT = false;
+    for (const p of s) {
+      if (p.t < tStart || p.T === undefined) continue;
+      const x = xOf(p.t), y = yT(p.T);
+      if (!startedT) { ctx.moveTo(x, y); startedT = true; } else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = "#f08c3a";
+    ctx.fillText(`fuel temp (dashed), ${world.T.toFixed(0)} of ${tMax.toFixed(0)} deg`, w - pad.r - 210 * dpr, h - 6 * dpr);
+
     ctx.strokeStyle = "#ff8200";
     ctx.lineWidth = 2 * dpr;
     ctx.beginPath();

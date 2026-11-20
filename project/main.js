@@ -35,7 +35,8 @@ let cursor = null;
 function build() {
   const keep = world
     ? { rods: world.p.rods, moderator: world.p.moderator, albedo: world.p.albedo,
-        source: world.p.source, integrator: world.integrator.constructor.name }
+        source: world.p.source, integrator: world.integrator.constructor.name,
+        feedback: world.p.feedback, alpha: world.p.alpha, cooling: world.p.cooling }
     : {};
   world = buildReactor(keep);
   world.addForce(spring);

@@ -46,6 +46,12 @@ export const PARAMS = {
   // moderator lattice and heat bath
   kTether: 120, kT: 1.0, cBath: 8.0,     // stiff and well damped, so struck atoms stay near their sites
   cap: 400, N0: 40,
+  // fuel temperature feedback (the Week 11 addition).
+  //   hot fuel fissions less readily:  P_thermal(T) = P_thermal * (1 - alpha * (T - Tcool))
+  // alpha is capped at 0.05 in the UI: the spike showed the core shuts down above about 0.1
+  // with slow cooling. cooling has a floor for the same reason in reverse -- too little cooling
+  // leaves a steady population too small to watch.
+  feedback: true, alpha: 0.05, cooling: 0.5, heatPerFission: 1.0, heatCapacity: 10, Tcool: 20,
 };
 
 // moderator atoms hang on springs from their lattice sites
@@ -87,6 +93,11 @@ export class ReactorWorld extends World {
     // every energy flow that the engine does not see goes in this ledger
     this.ledger = { absorbed: 0, leaked: 0, limited: 0, removed: 0,
                     fissionDrawn: 0, injected: 0, bathOut: 0, bathIn: 0 };
+    // fuel temperature. heat is tracked in its own ledger, separate from the mechanical energy,
+    // because fission heat never enters the simulated bodies -- it is a bookkeeping quantity.
+    this.T = p.Tcool;
+    this.heat = { generated: 0, removed: 0 };
+    this.fissionsThisStep = 0;
     this.count = { born: 0, bornReal: 0, fissions: 0, absRod: 0, leaked: 0, dropped: 0,
                    sourced: 0, fired: 0, invalid: 0 };
     this.nCount = 0;                // neutrons alive
@@ -252,6 +263,7 @@ export class ReactorWorld extends World {
     this.integrator.step(this, dt);                                // 3
     for (const ext of this.externals) this.ledger.injected += ext.work(dt);   // between 3 and 4
     this.resolveCollisions();                                      // 4 (the reactor's react() runs inside)
+    this.updateTemperature(dt);                                    // 4b: the fuel heats and cools
     this.time += dt;                                               // 5
     this.steps++;
     this.guard();
@@ -301,9 +313,12 @@ export class ReactorWorld extends World {
               this.ledger.absorbed += KE; this.count.absRod++; removed = true; break;
             }
             if (dx * b.vel.x + dy * b.vel.y <= 0) continue;   // already moving away, so no second chance
-            const P = KE < p.Ecut ? p.Pthermal : p.Pfast;     // a slow neutron is far more likely to fission
+            // a slow neutron is far more likely to fission, and hot fuel fissions less readily
+            const P = (KE < p.Ecut ? p.Pthermal : p.Pfast) * this.fuelFactor();
             if (rand() < P) {
               this.ledger.absorbed += KE; this.count.fissions++; removed = true;
+              this.heat.generated += p.heatPerFission;        // heat goes into the fuel, not the bodies
+              this.fissionsThisStep++;
               this.events.push({ x: t.pos.x, y: t.pos.y, t: this.time });
               born.push(t, rand() < 0.5 ? 2 : 3);
               break;
@@ -329,6 +344,34 @@ export class ReactorWorld extends World {
       }
     }
     if (this.events.length > 200) this.events.splice(0, this.events.length - 200);
+  }
+
+  // How much the fuel temperature suppresses fission. 1 means cold fuel, 0 means fully choked off.
+  // Clamped to [0, 1] so a very hot core cannot be driven to a negative probability.
+  fuelFactor() {
+    if (!this.p.feedback) return 1;
+    return Math.min(1, Math.max(0, 1 - this.p.alpha * (this.T - this.p.Tcool)));
+  }
+
+  // The fuel heats when it fissions and cools toward the coolant temperature. Newton cooling,
+  // integrated with the same fixed dt as everything else. The spike showed the result is
+  // identical to four digits at every DT this page offers, so no special treatment is needed.
+  updateTemperature(dt) {
+    const p = this.p;
+    const removed = p.cooling * (this.T - p.Tcool) * dt;
+    this.heat.removed += removed;
+    const dQ = p.heatPerFission * this.fissionsThisStep - removed;
+    this.T += dQ / p.heatCapacity;
+    if (this.T < p.Tcool) this.T = p.Tcool;        // cooling cannot chill the fuel below the coolant
+    this.fissionsThisStep = 0;
+  }
+
+  // heat generated = heat removed + heat stored. this is the new feature's ledger, and it is exact
+  heatBalance() {
+    const stored = this.p.heatCapacity * (this.T - this.p.Tcool);
+    const residual = this.heat.generated - this.heat.removed - stored;
+    const scale = Math.max(this.heat.generated, 1e-12);
+    return { generated: this.heat.generated, removed: this.heat.removed, stored, residual, rel: residual / scale };
   }
 
   // heat bath on the moderator atoms. damping and random kicks, once per step so it does not
@@ -371,7 +414,7 @@ export class ReactorWorld extends World {
   sample() {
     if (this.time < this.nextSample) return;
     const c = this.count;
-    this.samples.push({ t: this.time, N: this.nCount, born: c.born, lost: c.fissions + c.absRod + c.leaked });
+    this.samples.push({ t: this.time, N: this.nCount, T: this.T, born: c.born, lost: c.fissions + c.absRod + c.leaked });
     if (this.samples.length > 800) this.samples.shift();
     this.nextSample = this.time + 0.25;
   }
