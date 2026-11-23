@@ -65,3 +65,13 @@ Assignment 11 / Module 11: Journal
     I picked the reactor because I already liked it and it is close to the nuclear side of my program. The reason I added temperature feedback is that my Lab 10 reactor had no way to stop itself. Real reactors are stable because they get hot. It is unrealistic to have a model reactor with no temperature control.
     
     What scares me is the tests I have not thought to run yet. The one test I had been avoiding failed pretty badly the first time I tried it and the cause was not the new feature.
+
+Assignment 12 / Module 12: Journal
+
+    This week was mostly instruments rather than physics. I built a debug HUD and a conservative test mode, which just turns off every dissipative term so the simulation has to conserve energy.
+
+    It immediately failed at 80 %. My first thought was that the temperature feedback I added last week had broken something. I turned the moderator off entirely and the energy came out exact, so the core loop and the collisions are fine. Then, I ran it at three lattice stiffnesses and four timesteps. I believe that the engine is pushing overlapping bodies apart and stretching a stiff spring.
+
+    The debug switch found it in about two minutes. Without it, I would have had a number that looked fine, because the ledger I normally watch reads 0.2 %. I have been reporting the wrong diagnostic for a while now.
+
+    I am not fixing it this week. Softening the springs would pass the test but undo the thing I fixed in Week 11, where struck atoms were flying out of the core. It is first on next week's list.
