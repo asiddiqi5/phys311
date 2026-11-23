@@ -98,6 +98,8 @@ export class ReactorWorld extends World {
     this.T = p.Tcool;
     this.heat = { generated: 0, removed: 0 };
     this.fissionsThisStep = 0;
+    this.contactsThisStep = 0;    // contacts the engine resolved in the last step (debug HUD)
+    this.conservative = null;     // holds the saved live settings while conservative mode is on
     this.count = { born: 0, bornReal: 0, fissions: 0, absRod: 0, leaked: 0, dropped: 0,
                    sourced: 0, fired: 0, invalid: 0 };
     this.nCount = 0;                // neutrons alive
@@ -250,6 +252,36 @@ export class ReactorWorld extends World {
 
   scram() { this.setRods(1); }
 
+  // Conservative test mode. Zeroes every dissipative and driving term, so what is left is
+  // neutrons bouncing elastically off a tethered lattice inside a sealed box. That system
+  // must conserve energy, which makes it testable against Block 1-2 standards.
+  //   off  -> fission creates energy, absorption and leakage destroy it, the heat bath both
+  //   on   -> no source, no fission, no absorption, no leakage, no bath. e is already 1
+  // Nothing moves when you flip it, so the switch itself adds no energy. The baseline is
+  // retaken on the way in, so the drift readout measures from the moment you flipped it.
+  setConservative(on) {
+    const p = this.p;
+    if (on && !this.conservative) {
+      this.conservative = { source: p.source, Pthermal: p.Pthermal, Pfast: p.Pfast,
+                            cBath: p.cBath, kT: p.kT, albedo: p.albedo, rods: p.rods,
+                            feedback: p.feedback };
+      p.source = 0;        // no driving: nothing new is injected
+      p.Pthermal = 0;      // no fission: no energy created
+      p.Pfast = 0;
+      p.cBath = 0;         // no damping and no random kicks
+      p.kT = 0;
+      p.albedo = 1;        // nothing leaks out of the box
+      p.feedback = false;
+      this.setRods(0);     // nothing absorbs
+      this.captureBaseline();
+    } else if (!on && this.conservative) {
+      Object.assign(p, this.conservative);
+      this.setRods(this.conservative.rods);
+      this.conservative = null;
+      this.captureBaseline();
+    }
+  }
+
   /* ------------------------------------------------------------- stepping */
 
   // The engine's World.step runs five stages: clear forces, apply forces, integrate, collide, advance the
@@ -274,7 +306,17 @@ export class ReactorWorld extends World {
   // runs where the collision stage runs, so reactions happen before the engine bounces anything
   resolveCollisions() {
     this.react();
+    const before = this.collisionCount;
     super.resolveCollisions();
+    this.contactsThisStep = this.collisionCount - before;
+  }
+
+  // fastest body in the scene, for the debug HUD. A number far above the speed limit
+  // would mean the guard is not firing
+  maxSpeed() {
+    let v = 0;
+    for (const b of this.bodies) if (!b.isStatic) v = Math.max(v, b.vel.length());
+    return v;
   }
 
   react() {
@@ -309,7 +351,10 @@ export class ReactorWorld extends World {
             const dx = t.pos.x - b.pos.x, dy = t.pos.y - b.pos.y;
             const rad = t.radius + b.radius;
             if (dx * dx + dy * dy >= rad * rad) continue;
-            if (t.name === "rod") {                       // absorbed by a control rod
+            if (t.name === "rod") {
+              // absorbed by a control rod -- a dissipative channel, so conservative mode
+              // leaves the rod in place as an elastic obstacle but does not swallow the neutron
+              if (this.conservative) continue;
               this.ledger.absorbed += KE; this.count.absRod++; removed = true; break;
             }
             if (dx * b.vel.x + dy * b.vel.y <= 0) continue;   // already moving away, so no second chance

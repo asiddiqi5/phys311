@@ -20,7 +20,9 @@ const hud = new ReactorHUD($("hud"));
 const chart = new StripChart($("chart"));
 const announce = makeAnnouncer($("live"));
 
-const state = { running: true, speed: 1, dtIndex: 2, fireSpeed: 3 };
+const state = { running: true, speed: 1, dtIndex: 2, fireSpeed: 3,
+  // debug HUD: on with ?debug=1 in the address bar, or the D key at any time
+  debug: new URLSearchParams(location.search).has("debug") };
 const timing = { fps: 60, physicsMs: 0, renderMs: 0 };
 const spring = new MouseSpring();
 const recorder = new Recorder();
@@ -127,6 +129,18 @@ const actions = {
   },
 
   cancel() { input.cancel(); },
+
+  toggleDebug() {
+    state.debug = !state.debug;
+    announce(state.debug ? "Debug readouts on" : "Debug readouts off");
+  },
+
+  setConservative(on) {
+    world.setConservative(on);
+    sync(ctx);
+    announce(on ? "Conservative test mode on. No source, fission, absorption, leakage or heat bath."
+               : "Conservative test mode off. Normal reactor.");
+  },
   setDT(i) {
     state.dtIndex = clamp(Math.round(i), 0, DT_CHOICES.length - 1);     // an index, never a fraction
     acc = new Accumulator(DT_CHOICES[state.dtIndex]);
@@ -185,7 +199,7 @@ function frame(nowMs) {
     timing.renderMs = 0.9 * timing.renderMs + 0.1 * (performance.now() - t1);
 
     if (nowMs - lastHud > 100) {
-      hud.update(world, timing, acc, { cursor, corners: corners(), paused: !state.running });
+      hud.update(world, timing, acc, { cursor, corners: corners(), paused: !state.running, debug: state.debug });
       chart.draw(world);
       lastHud = nowMs;
     }

@@ -15,7 +15,36 @@ export class ReactorHUD {
     this.warn = 0.01;      // red past 1 % energy error
   }
 
+  // The six readouts the Week 12 lesson asks for, behind ?debug=1 or the D key.
+  // Drift turns red past 1 %, which is the tolerance I stated in my proposal.
+  debugRows(world, timing, row, lvl) {
+    const d = world.drift();
+    const p = world.momentum().length();
+    const vMax = world.maxSpeed();
+    return [
+      "<hr>",
+      row("<b>DEBUG</b>", "?debug=1 or D"),
+      row("E", `${world.totalEnergy().toFixed(4)} J`),
+      row("drift &Delta;E/E&#8320;", `${(d.dE * 100).toFixed(3)} %`, lvl(d.dE),
+          "Red past 1 %, the tolerance stated in my proposal"),
+      row("|p|", `${p.toFixed(4)}`, "",
+          "Total momentum. NOT a conservation check in this project: fission creates neutrons, "
+          + "absorption destroys them, and the walls push. It is here to spot a sudden jump, which "
+          + "would mean an asymmetric impulse"),
+      row("bodies", `${world.bodies.length} (${world.nCount} neutrons)`),
+      row("contacts this step", `${world.contactsThisStep}`,
+          world.contactsThisStep > 40 ? "warn" : "",
+          "Resolved by the engine in the last step. A count that never falls to 0 means repeated resolution"),
+      row("max |v|", `${vMax.toFixed(2)} m/s`, vMax > world.p.vMax + 1e-9 ? "bad" : "",
+          `Speed limit is ${world.p.vMax} m/s. Above that would mean the guard is not firing`),
+      row("fps", `${timing.fps.toFixed(1)}`),
+      world.conservative ? row("mode", "CONSERVATIVE", "good",
+          "No source, fission, absorption, leakage or heat bath. Energy must be conserved") : "",
+    ];
+  }
+
   update(world, timing, acc, extra = {}) {
+    this.debug = !!extra.debug;
     const d = world.drift();
     const le = world.ledgerError();
     const nb = world.neutronBalance();
@@ -63,6 +92,7 @@ export class ReactorHUD {
       row("physics", `${timing.physicsMs.toFixed(2)} ms/frame`),
       row("render", `${timing.renderMs.toFixed(2)} ms/frame`),
       row("steps/frame", `${acc.stepsLastFrame}${acc.clamped ? " (clamped)" : ""}`),
+      ...(this.debug ? this.debugRows(world, timing, row, lvl) : []),
     ].join("");
 
     this.el.setAttribute("aria-label",

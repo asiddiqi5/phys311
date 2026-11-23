@@ -113,6 +113,14 @@
     <label class="check"><input type="checkbox" id="vectors"> Velocity arrows</label>
     <label class="check"><input type="checkbox" id="showChart" checked> Population chart</label>
 
+    <h2>Testing</h2>
+    <label class="check"><input type="checkbox" id="conservative"> Conservative test mode</label>
+    <label class="check"><input type="checkbox" id="debugHud"> Debug readouts (D)</label>
+    <p class="hint">Conservative mode turns off the source, fission, absorption, leakage and the heat
+    bath, leaving neutrons bouncing elastically in a sealed box. That system must conserve energy, so
+    the drift readout becomes a real test. The reactor sliders are disabled while it is on.
+    Add <code>?debug=1</code> to the address to start with the debug readouts showing.</p>
+
     <h2>Data</h2>
     <div class="btns">
       <button id="btn-csv" type="button">Download CSV</button>
@@ -125,7 +133,7 @@
     <p class="keys">
       <kbd>Space</kbd> pause or resume &middot; <kbd>.</kbd> one step &middot; <kbd>R</kbd> reset<br>
       <kbd>&minus;</kbd> <kbd>+</kbd> speed &middot; <kbd>F</kbd> fire &middot; <kbd>S</kbd> SCRAM<br>
-      <kbd>T</kbd> trails &middot; <kbd>Esc</kbd> let go of a grab or cancel an aim
+      <kbd>T</kbd> trails &middot; <kbd>D</kbd> debug readouts &middot; <kbd>Esc</kbd> let go of a grab or cancel an aim
     </p>
   </aside>
 
@@ -145,7 +153,7 @@
 
   <div class="legend-grid">
     <div><span class="chip neutron"></span><strong>Neutrons</strong> (small dots) split.
-    Their colour is their speed: red is fast, blue is slow.<div></div>
+    Their colour is their speed: red is fast, blue is slow.</div>
 
     <div><span class="chip fuel"></span><strong>Fuel</strong> (yellow rings) is the uranium. A
     neutron splitting a fuel atom is a fission, meaning it releases heat and throws out two

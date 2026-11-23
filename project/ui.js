@@ -60,6 +60,8 @@ export function setupUI(ctx) {
     showChart:  (on) => { $("chart-box").hidden = !on; },
     teleport:   (on) => { ctx.actions.setTeleport(on); },
     feedback:   (on) => { ctx.world().p.feedback = on; },
+    conservative: (on) => { ctx.actions.setConservative(on); },
+    debugHud:   (on) => { ctx.state.debug = on; },
   };
   for (const [id, fn] of Object.entries(toggles)) {
     const el = $(id);
@@ -107,6 +109,15 @@ export function sync(ctx) {
   }
   const fb = $("feedback");
   if (fb) fb.checked = w.p.feedback;
+  const cons = $("conservative");
+  if (cons) cons.checked = !!w.conservative;
+  const dbg = $("debugHud");
+  if (dbg) dbg.checked = ctx.state.debug;
+  // the reactor sliders do nothing while conservative mode holds them at zero
+  for (const id of ["alpha", "cooling", "source", "rods"]) {
+    const el = $(id);
+    if (el) el.disabled = !!w.conservative;
+  }
   const integ = $("integrator");
   if (integ) integ.value = w.integrator.constructor.name;
 }

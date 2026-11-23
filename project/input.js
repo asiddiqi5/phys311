@@ -243,6 +243,7 @@ export function bindKeys(actions, target = window) {
       " ": actions.togglePause, ".": actions.stepOnce, r: actions.reset,
       "-": actions.speedDown, "+": actions.speedUp, "=": actions.speedUp,
       f: actions.fire, s: actions.scram, t: actions.toggleTrails, Escape: actions.cancel,
+      d: actions.toggleDebug,
     };
     const fn = map[key];
     if (!fn) return;
